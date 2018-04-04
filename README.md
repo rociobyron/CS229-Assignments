@@ -2,7 +2,7 @@
 Programming assignments for the Standford Machine learning course (CS229).
 
 ## Disclaimers
-- These assignments were developed by Dan Boneh and Andrew Ng
+- These assignments were developed by Dan Boneh and Andrew Ng for the on-campus [_**CS229: Machine Learning course**_](http://cs229.stanford.edu) (Autumn 2017).
 - If you are following a related course, consider whether checking my solutions might constitute a violation of the honour code
 
 ## Index
