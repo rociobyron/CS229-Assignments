@@ -1,3 +1,11 @@
+"""
+Finds set of parameters that minimise the cost function for linear regression,
+both with and without gaussian weights.
+
+@author Rocío Byron
+created on 2017/10/19
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,29 +14,27 @@ import matplotlib.pyplot as plt
 train = pd.read_csv("http://cs229.stanford.edu/ps/ps1/quasar_train.csv", )
 test = pd.read_csv("http://cs229.stanford.edu/ps/ps1/quasar_test.csv")
 
-# # (b)i. Unweighted linear regression of the first example
-# Y = train.loc[0, :]
-# X = pd.DataFrame({'x0': np.ones(len(Y)), 'x1': Y.index}, dtype='float64')
-#
-# XT = np.transpose(X)
-# XTX = np.dot(XT, X)
-#
-# theta = np.dot(np.dot(np.linalg.inv(XTX), XT), Y.values)
-# print(theta)
-#
-# Xmax = X.max()[1]
-# Xmin = X.min()[1]
-# boundX = np.arange(Xmin, Xmax, (Xmax - Xmin)/100)
-# boundY = theta[0] + theta[1]*boundX
-# plt.xlabel('Wavelength')
-# plt.ylabel('Flux')
-# plt.scatter(X.x1, Y.values, marker='o', color='r')
-# plt.plot(boundX, boundY, color='b')
-# plt.title(r"[$\theta_0,\theta_1$] = {}".format(theta))
-# plt.savefig('PSET1_5bi.png', bbox_inches='tight')
+# (b)i. Unweighted linear regression of the first example
+Y = train.loc[0, :]
+X = pd.DataFrame({'x0': np.ones(len(Y)), 'x1': Y.index}, dtype='float64')
 
-# # (b)ii. Weighted linear regression of the first example
-# tau = 5
+XT = np.transpose(X)
+XTX = np.dot(XT, X)
+
+# Normal equation
+theta = np.dot(np.dot(np.linalg.inv(XTX), XT), Y.values)
+print(theta)
+
+Xmax = X.max()[1]
+Xmin = X.min()[1]
+boundX = np.arange(Xmin, Xmax, (Xmax - Xmin)/100)
+boundY = theta[0] + theta[1]*boundX
+
+plt.xlabel('Wavelength')
+plt.ylabel('Flux')
+plt.scatter(X.x1, Y.values, marker='o', color='r')
+plt.plot(boundX, boundY, color='b')
+plt.savefig('PSET1_5bi.png', bbox_inches='tight')
 
 def Weight(m, boundx, X, tau):
     if (m != len(X)):
@@ -40,31 +46,41 @@ def Weight(m, boundx, X, tau):
 
     return W
 
+# (b)ii. Weighted linear regression of the first example
+tau = 5
 
-Y = train.loc[0, :]
-X = pd.DataFrame({'x0': np.ones(len(Y)), 'x1': Y.index}, dtype='float64')
+for i in range(0, len(boundX)):
+    x = boundX[i]
+    W = Weight(len(Y.values), x, X.x1, tau)
+    XTWX = np.dot(np.dot(XT, W), X)
 
-XT = np.transpose(X)
+    # Weighted normal equation
+    theta = np.dot(np.dot(np.dot(np.linalg.inv(XTWX), XT), W), Y.values)
 
-Xmax = X.max()[1]
-Xmin = X.min()[1]
-boundX = np.arange(Xmin, Xmax, (Xmax - Xmin)/len(Y.values))
-boundY = np.ones(boundX.shape)
+    boundY[i] = theta[0] + theta[1]*x
 
+plt.figure()
+plt.xlabel('Wavelength')
+plt.ylabel('Flux')
+plt.scatter(X.x1, Y.values, marker='o', color='r')
+plt.plot(boundX, boundY, color='b')
+plt.savefig('PSET1_5bii.png', bbox_inches='tight')
+
+# (b)iii. Weighted linear regression for different bandwidths
 for tau in [1, 10, 100, 1000]:
     for i in range(0, len(boundX)):
-        W = Weight(len(Y.values), boundX[i], X.x1, tau)
+        x = boundX[i]
+        W = Weight(len(Y.values), x, X.x1, tau)
         XTWX = np.dot(np.dot(XT, W), X)
 
+        # Weighted normal equation
         theta = np.dot(np.dot(np.dot(np.linalg.inv(XTWX), XT), W), Y.values)
 
-        boundY[i] = theta[0] + theta[1]*boundX[i]
+        boundY[i] = theta[0] + theta[1]*x
 
     plt.figure()
-
     plt.xlabel('Wavelength')
     plt.ylabel('Flux')
     plt.scatter(X.x1, Y.values, marker='o', color='r')
     plt.plot(boundX, boundY, color='b')
-    plt.title(r'Weighted linear regression $\tau = {}$'.format(tau))
     plt.savefig('PSET1_5biii{}.png'.format(tau), bbox_inches='tight')

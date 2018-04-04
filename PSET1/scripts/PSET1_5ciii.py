@@ -1,12 +1,19 @@
+"""
+Smoothes provided spectra based on locally weighted linear regression.
+
+@author Rocío Byron
+created on 2017/10/19
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 def d(fA, FB):
     """
-        Distance parameter
-        Takes a [px1] ndarray and a [mxp] ndarray and returns the cumulative square distances
-        between the first array and each of the rows of the matrix, [mx1]
+    Distance parameter
+    Takes a [px1] ndarray and a [mxp] ndarray and returns the cumulative square distances
+    between the first array and each of the rows of the matrix, [mx1]
     """
 
     p = np.shape(fA)[0]
@@ -34,6 +41,7 @@ def ker(t):
     return max(1-t, 0)
 
 
+# loads smoothed spectra
 train = pd.read_csv("./Ftrain.csv", header=0, index_col=0)
 mtrain = train.shape[0]
 
@@ -101,39 +109,30 @@ for i in range(0, mtest):
     fleft_hat[i, :] = np.divide(num, den)
     d_test[i] = d(fleft_hat[i, :], fleft_test.loc[i, :].values)
 
-
+# Plot for the first example
+m = 1
 fig, ax = plt.subplots()
-ax.plot(x[0:pleft], fleft_hat[0, :], 'r', label='Estimated fleft')
-ax.plot(x, test.loc[0, :], 'b', label='Observed f')
-ax.set_title('Example m = 1')
-ax.set_xlim(1150, 1600)
+ax.plot(x[0:pleft], fleft_hat[m - 1, :], 'r', label='Estimated fleft')
+ax.plot(x, test.loc[m - 1, :], 'b', label='Observed f')
+ax.set_xlim(1150, 1199)
 ax.set_ylim(0.5, 1.5)
-
-# Now add the legend with some customizations.
+ax.set_xlabel('Wavelength')
+ax.set_ylabel('Flux')
 legend = ax.legend()
-plt.show()
+plt.savefig('PSET1_5ciii1.png', bbox_inches='tight')
 
-#
-# fig, ax = plt.subplots()
-# ax.plot(x[0:pleft], fleft_hat[0, :], 'r', label='Estimated fleft')
-# ax.plot(x[0:pleft], fleft_test.loc[0, :], 'b', label='Observed fleft')
-# ax.set_title('Example m = 1')
-# ax.set_xlim(1150, 1200)
-# ax.set_ylim(0, 2)
-#
-# # Now add the legend with some customizations.
-# legend = ax.legend()
-# plt.show()
-#
-# fig, ax = plt.subplots()
-# ax.plot(x[0:pleft], fleft_hat[5, :], 'r', label='Estimated fleft')
-# ax.plot(x[0:pleft], fleft_test.loc[5, :], 'b', label='Observed fleft')
-# ax.set_title('Example m = 6')
-# ax.set_xlim(1150, 1200)
-# ax.set_ylim(0, 2)
-#
-# # Now add the legend with some customizations.
-# legend = ax.legend()
-# plt.show()
+# Plot for the sixth example
+m = 6
+fig, ax = plt.subplots()
+ax.plot(x[0:pleft], fleft_hat[(m - 1), :], 'r', label='Estimated fleft')
+ax.plot(x, test.loc[(m - 1), :], 'b', label='Observed f')
+ax.set_xlim(1150, 1199)
+ax.set_ylim(0.5, 1.5)
+ax.set_xlabel('Wavelength')
+ax.set_ylabel('Flux')
+legend = ax.legend()
+plt.savefig('PSET1_5ciii6.png', bbox_inches='tight')
+
+plt.show()
 
 print(np.mean(d_test))

@@ -1,10 +1,17 @@
+"""
+Finds set of parameters that minimise the average empirical loss for logistic regression.
+
+@author Rocío Byron
+created on 2017/10/19
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 def dJxy(x, y):
 
-    """ Returns the gradient vector of J(theta) given a set of (x, y) """
+    """ Returns the gradient vector of J(theta)"""
     # input control on x and y
     try:
         (m, nAmp) = x.shape # (samples, features) including row of "1"s
@@ -16,6 +23,11 @@ def dJxy(x, y):
         raise Exception("Dimensions of x and y not matching")
 
     def dJ(theta):
+
+        """
+        Returns the gradient of the average empirical loss function for
+        logistic regression.
+        """
 
         # input control on theta
         try:
@@ -40,7 +52,7 @@ def dJxy(x, y):
 
 def Hxy(x, y):
 
-    """ Returns the Hessian matrix of J(theta) given a set of (x, y) """
+    """ Returns the Hessian matrix of J(theta)"""
 
     # input control on x and y
     try:
@@ -79,6 +91,9 @@ def Hxy(x, y):
     return H
 
 def Newton(dJ, H, theta0, it=1e2):
+
+    """ Implements Newton's method for minimising a function. """
+
     dJprev = dJ(theta0)
     Hprev = H(theta0)
     thprev = theta0

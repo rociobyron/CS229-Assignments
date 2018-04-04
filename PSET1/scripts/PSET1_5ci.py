@@ -1,3 +1,10 @@
+"""
+Smoothes provided spectra based on locally weighted linear regression.
+
+@author Rocío Byron
+created on 2017/10/19
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
