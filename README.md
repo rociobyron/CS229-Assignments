@@ -9,4 +9,4 @@ Programming assignments for the Standford Machine learning course (CS229).
 1. [Supervised learning](./PSET1)
 2. [Supervised learning II](./PSET2)
 3. [Deep learning and unsupervised learning](./PSET3)
-4. [Expectation maximisation] (./PSET4)
+4. [Expectation-maximisation, deep learning and reinforced learning](./PSET4)
